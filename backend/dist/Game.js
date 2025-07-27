@@ -26,11 +26,11 @@ class Game {
     makeMove(socket, move) {
         // validation here
         //is it this users move
-        if (this.board.moves.length % 2 === 0 && socket !== this.player1) {
+        if (this.moves.length % 2 === 0 && socket !== this.player1) {
             return;
         }
         ;
-        if (this.board.moves.length % 2 !== 0 && socket !== this.player2) {
+        if (this.moves.length % 2 !== 0 && socket !== this.player2) {
             return;
         }
         ;
@@ -45,29 +45,29 @@ class Game {
         //check if the game is over
         if (this.board.isGameOver()) {
             // send the player that game is over
-            this.player1.emit(JSON.stringify({
+            this.player1.send(JSON.stringify({
                 type: messages_1.GAME_OVER,
                 winner: this.board.turn() === "w" ? "Black" : "White"
             }));
-            this.player2.emit(JSON.stringify({
+            this.player2.send(JSON.stringify({
                 type: messages_1.GAME_OVER,
                 winner: this.board.turn() === "w" ? "Black" : "White"
             }));
-            return;
         }
         //send the update board to both players
-        if (this.board.moves.length % 2 === 0) {
-            this.player2.emit(JSON.stringify({
+        if (this.moves.length % 2 === 0) {
+            this.player2.send(JSON.stringify({
                 type: messages_1.MOVE,
                 payload: move
             }));
         }
         else {
-            this.player1.emit(JSON.stringify({
+            this.player1.send(JSON.stringify({
                 type: messages_1.MOVE,
                 payload: move
             }));
         }
+        this.moves.push(JSON.stringify(move));
         //update the board
         //push the move
     }
